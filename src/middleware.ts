@@ -13,8 +13,10 @@ export const config = {
   // matcher: [
   //   '/',
   // ]
-    matcher: ["/((?!api|_next|auth).*)"]
-
+    // matcher: ["/((?!api|_next|auth).*)"]
+  matcher: [
+    '/services/:path*', // sirf /services aur uske subroutes protect honge
+  ],
 }
 
 
