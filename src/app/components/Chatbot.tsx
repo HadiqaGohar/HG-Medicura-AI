@@ -1204,7 +1204,10 @@ const Chatbot: React.FC = () => {
   // const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
   
 // NEW CODE (Replace with this):
-const API_BASE_URL = ''; // Empty string for relative path
+// const API_BASE_URL = ''; // Empty string for relative path
+  
+  // API_BASE_URL change karein
+const API_BASE_URL = 'https://hg-medicura-ai-backend-production.up.railway.app';
 
   useEffect(() => {
     // Initialize with welcome message
