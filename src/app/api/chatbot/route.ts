@@ -38,6 +38,8 @@ export async function POST(req: NextRequest) {
     const FASTAPI_URL = process.env.NEXT_PUBLIC_FASTAPI_URL || 'https://hg-medicura-ai-backend-production.up.railway.app';
 const backendUrl = FASTAPI_URL.replace(/\/$/, ''); // Remove trailing slash if present
 
+console.log('Sending request to:', `${backendUrl}/api/chatbot`, 'Body:', body);    
+
 const response = await fetch(`${backendUrl}/api/chatbot`, {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
