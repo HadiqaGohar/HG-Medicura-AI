@@ -875,6 +875,8 @@
 
 
 
+
+
 // src/app/api/symptom-analyzer/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -931,8 +933,10 @@ function validateSymptoms(symptoms: unknown): string[] | null {
 
 export async function POST(request: NextRequest) {
   try {
-    // Get client IP for rate limiting
-    const clientIP = request.ip || request.headers.get('x-forwarded-for') || 'unknown';
+    // Get client IP for rate limiting - use x-forwarded-for header
+    const clientIP = request.headers.get('x-forwarded-for') || 
+                    request.headers.get('x-real-ip') || 
+                    'unknown';
     
     // Check rate limit
     const rateLimit = checkRateLimit(clientIP);
@@ -1168,3 +1172,4 @@ export async function DELETE() {
 export async function PATCH() {
   return NextResponse.json({ error: 'Method not allowed' }, { status: 405 });
 }
+
