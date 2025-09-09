@@ -11,7 +11,11 @@ const nextConfig: NextConfig = {
         pathname: "/**",
       },
     ]
-  }
+  },
+  env: {
+    NEXT_PUBLIC_FASTAPI_URL: 'https://hg-medicura-ai-backend-production.up.railway.app', // Ensure correct backend URL
+  },
+  
 };
 
 export default nextConfig;
