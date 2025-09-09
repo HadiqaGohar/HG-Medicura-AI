@@ -590,6 +590,11 @@
 // }
 
 
+
+
+
+
+
 import { NextResponse, NextRequest } from 'next/server';
 
 export const runtime = 'edge';
@@ -728,6 +733,7 @@ export async function POST(request: NextRequest) {
 
     if (!response || !response.ok) {
       const errorText = await response?.text();
+      // Log the exact error from the Gemini API for debugging
       console.error(`Gemini API error: ${response?.status} - ${errorText}`);
       return NextResponse.json({ error: 'Failed to analyze symptoms. Please try again later.' }, { status: 500 });
     }
