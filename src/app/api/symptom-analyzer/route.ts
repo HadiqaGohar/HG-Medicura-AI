@@ -129,7 +129,6 @@
 //   }
 // }
 
-
 import { NextRequest, NextResponse } from 'next/server';
 
 export const runtime = 'edge';
@@ -160,6 +159,7 @@ export async function POST(request: NextRequest) {
     url: request.url,
     headers: Object.fromEntries(request.headers),
     method: request.method,
+    ip: request.ip,
   });
 
   try {
@@ -272,8 +272,13 @@ Limit possible conditions and advice to 3-5 items each. Be accurate, neutral, an
   }
 }
 
-export async function GET() {
-  console.log('[SymptomAnalyzer] Received GET request (not allowed)');
+export async function GET(request: NextRequest) {
+  console.log('[SymptomAnalyzer] Received GET request (not allowed):', {
+    url: request.url,
+    headers: Object.fromEntries(request.headers),
+    method: request.method,
+    ip: request.ip,
+  });
   return NextResponse.json(
     { error: 'Method Not Allowed. Use POST for /api/symptom-analyzer' },
     { status: 405 }
