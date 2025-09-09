@@ -1,95 +1,18 @@
-// // src/middleware.ts
-// import { withAuth } from 'next-auth/middleware'
-
-// export default withAuth(
-//   {
-//     pages: {
-//       signIn: '/auth/signin',
-//     },
-//   }
-// )
-
-// export const config = {
-//   // matcher: [
-//   //   '/',
-//   // ]
-//     // matcher: ["/((?!api|_next|auth).*)"]
-//   matcher: [
-//       "/services", 
-//     '/services/:path*', // sirf /services aur uske subroutes protect honge
-//   ],
-// }
-
-
-// // // src/middleware.ts
-// // import { withAuth } from 'next-auth/middleware'
-
-// // export default withAuth(
-// //   {
-// //     pages: {
-// //       signIn: '/auth/signin',
-// //     },
-// //   }
-// // )
-
-// // export const config = {
-// //   matcher: [
-// //     '/services/symptom-analyzer',
-// //     '/services/drug-interaction',
-// //     '/services/medical-term',
-// //     '/services/report-summarize',
-// //     // '/resume/:path*',
-// //     // '/upload-resume/:path*',
-// //     // '/myaccount/:path*',
-// //     // '/admin/:path*'
-// //   ]
-// // }
-
-
-
 import { withAuth } from 'next-auth/middleware'
 
 export default withAuth(
-  function middleware(req) {
-    // Add any additional middleware logic here
-  },
   {
-    callbacks: {
-      authorized: ({ token, req }) => {
-        // Allow access to public routes
-        const publicRoutes = [
-          '/',
-          '/auth/signin',
-          '/auth/signout',
-          '/contact',
-          '/api/auth',
-          '/api/test-db'
-        ]
-        
-        const { pathname } = req.nextUrl
-        
-        // Check if it's a public route
-        if (publicRoutes.some(route => pathname.startsWith(route))) {
-          return true
-        }
-        
-        // For protected routes, require authentication
-        return !!token
-      },
+    pages: {
+      signIn: '/auth/signin',
     },
   }
 )
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api/auth (NextAuth.js routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public folder
-     */
-    '/((?!api/auth|_next/static|_next/image|favicon.ico|.*\\.png$|.*\\.jpg$|.*\\.jpeg$|.*\\.gif$|.*\\.svg$).*)',
-  ],
+    '/services/:path*',
+    '/profile/:path*',
+    '/myaccount/:path*',
+    '/admin/:path*'
+  ]
 }
