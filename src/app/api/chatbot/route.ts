@@ -24,17 +24,26 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Get backend URL from environment
-    const FASTAPI_URL = process.env.NEXT_PUBLIC_FASTAPI_URL || 'http://localhost:8000' || 'https://ehmt8mro7sonvp9cs5oblz.streamlit.app/';
+    // // Get backend URL from environment
+    // const FASTAPI_URL = process.env.NEXT_PUBLIC_FASTAPI_URL || 'http://localhost:8000' || 'https://ehmt8mro7sonvp9cs5oblz.streamlit.app/';
 
-    // Forward the request to the FastAPI backend
-    const response = await fetch(`${FASTAPI_URL}/api/chatbot`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
-    });
+    // // Forward the request to the FastAPI backend
+    // const response = await fetch(`${FASTAPI_URL}/api/chatbot`, {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify(body),
+    // });
+    const FASTAPI_URL = process.env.NEXT_PUBLIC_FASTAPI_URL || 'https://hg-medicura-ai-backend-production.up.railway.app';
+const backendUrl = FASTAPI_URL.replace(/\/$/, ''); // Remove trailing slash if present
+
+const response = await fetch(`${backendUrl}/api/chatbot`, {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify(body),
+});
+
 
     // Check if the backend response is successful
     if (!response.ok) {
