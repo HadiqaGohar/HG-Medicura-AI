@@ -920,7 +920,7 @@ function checkRateLimit(ip: string): { allowed: boolean; remaining: number } {
   return { allowed: true, remaining: RATE_LIMIT.maxRequests - record.count };
 }
 
-function validateSymptoms(symptoms: any): string[] | null {
+function validateSymptoms(symptoms): string[] | null {
   if (!Array.isArray(symptoms)) return null;
   
   const validSymptoms = symptoms.filter(
@@ -958,7 +958,7 @@ export async function POST(request: NextRequest) {
     let body: RequestBody;
     try {
       body = await request.json();
-    } catch (parseError) {
+    } catch () {
       return NextResponse.json(
         { error: 'Invalid JSON in request body' },
         { status: 400 }
@@ -1122,7 +1122,7 @@ Rules:
       }
     });
 
-  } catch (error: any) {
+  } catch (error) {
     console.error('Symptom analyzer error:', error);
     
     if (error.name === 'AbortError' || error.name === 'TimeoutError') {
