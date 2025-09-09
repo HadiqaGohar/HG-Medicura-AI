@@ -590,25 +590,16 @@
 // }
 
 
-
-
-
-
-
-
 import { NextResponse, NextRequest } from 'next/server';
 
-// Use the edge runtime for faster execution on Vercel
 export const runtime = 'edge';
 
-// Define the expected structure for the request body
 interface RequestBody {
   symptoms: string[];
   duration?: string;
   severity?: string;
 }
 
-// Define the expected structure for the AI's response
 interface SymptomAnalysis {
   possible_conditions: string[];
   general_advice: string[];
@@ -623,7 +614,6 @@ interface SymptomAnalysis {
  */
 function extractJsonFromResponse(text: string): SymptomAnalysis | null {
   try {
-    // Remove markdown code block fences and trim whitespace
     const cleaned = text.replace(/```json/g, '').replace(/```/g, '').trim();
     return JSON.parse(cleaned) as SymptomAnalysis;
   } catch (e) {
@@ -634,94 +624,122 @@ function extractJsonFromResponse(text: string): SymptomAnalysis | null {
 
 /**
  * Handle POST requests to analyze symptoms.
- * This is the primary function for the symptom analyzer API.
  */
 export async function POST(request: NextRequest) {
+  const maxRetries = 5;
+  const initialDelay = 1000; // 1 second
+
   try {
     const body: RequestBody = await request.json();
     const { symptoms, duration = 'not specified', severity = 'not specified' } = body;
 
-    // Validate that symptoms array is present and not empty
     if (!Array.isArray(symptoms) || symptoms.length === 0) {
       return NextResponse.json({ error: 'At least one symptom is required' }, { status: 400 });
     }
 
-    // Ensure the API key is configured
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
       console.error('GEMINI_API_KEY is not set');
       return NextResponse.json({ error: 'Server configuration error: Missing API key' }, { status: 500 });
     }
 
-    // Construct a clear and specific prompt for the AI model
     const symptomsStr = symptoms.join(', ');
-    const prompt = `
-You are a professional health assistant. Analyze the following symptoms and provide a structured response.
 
-Symptoms: ${symptomsStr}
-Duration: ${duration}
-Severity: ${severity}
+    // Construct a clear and specific prompt for the AI model
+    const prompt = `Analyze the following symptoms and provide a structured JSON response.`;
 
-Respond ONLY with valid JSON in this exact structure:
-{
-  "possible_conditions": ["condition1", "condition2", "condition3"],
-  "general_advice": ["advice1", "advice2", "advice3"],
-  "disclaimer": "This is not medical advice. Consult a healthcare professional for proper diagnosis and treatment."
-}
-
-Limit possible conditions and advice to 3-5 items each. Ensure accuracy, neutrality, and always emphasize seeking professional medical help. The disclaimer MUST be included exactly as provided.
-`;
-
-    // Make the request to the Gemini API
-    const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
-    const response = await fetch(`${url}?key=${apiKey}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
+    const requestPayload = {
+      contents: [{
+        role: "user",
+        parts: [{
+          text: `
+            Symptoms: ${symptomsStr}
+            Duration: ${duration}
+            Severity: ${severity}
+          `
+        }]
+      }],
+      systemInstruction: {
+        parts: [{
+          text: `
+            You are a professional health assistant. Your purpose is to analyze symptoms and provide information.
+            Respond ONLY with valid JSON in this exact structure:
+            {
+              "possible_conditions": ["condition1", "condition2", "condition3"],
+              "general_advice": ["advice1", "advice2", "advice3"],
+              "disclaimer": "This is not medical advice. Consult a healthcare professional for proper diagnosis and treatment."
+            }
+            
+            Limit possible conditions and advice to 3-5 items each. Be accurate, neutral, and always emphasize seeking professional medical help. The disclaimer MUST be included exactly as provided.
+          `
+        }]
       },
-      body: JSON.stringify({
-        contents: [
-          {
-            parts: [
-              {
-                text: prompt,
-              },
-            ],
+      generationConfig: {
+        temperature: 0.7,
+        maxOutputTokens: 512,
+        topP: 0.8,
+        topK: 40,
+        responseMimeType: "application/json",
+        responseSchema: {
+          type: "OBJECT",
+          properties: {
+            "possible_conditions": {
+              type: "ARRAY",
+              items: { type: "STRING" }
+            },
+            "general_advice": {
+              type: "ARRAY",
+              items: { type: "STRING" }
+            },
+            "disclaimer": { type: "STRING" }
           },
-        ],
-        generationConfig: {
-          temperature: 0.7,
-          maxOutputTokens: 512,
-          topP: 0.8,
-          topK: 40,
-        },
-        safetySettings: [
-          { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
-          { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
-          { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
-          { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
-        ],
-      }),
-      cache: 'no-store',
-    });
+          "propertyOrdering": ["possible_conditions", "general_advice", "disclaimer"]
+        }
+      },
+      safetySettings: [
+        { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+        { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+        { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+        { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+      ],
+    };
 
-    // Handle failed API requests
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error(`Gemini API error: ${response.status} - ${errorText}`);
+    let response;
+    for (let i = 0; i < maxRetries; i++) {
+      try {
+        const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent';
+        response = await fetch(`${url}?key=${apiKey}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(requestPayload),
+          cache: 'no-store',
+        });
+        if (response.status !== 429) {
+          break; // Exit the retry loop on success or a non-rate-limit error
+        }
+        const delay = initialDelay * Math.pow(2, i);
+        console.warn(`Rate limit exceeded. Retrying in ${delay}ms...`);
+        await new Promise(res => setTimeout(res, delay));
+      } catch (e) {
+        console.error(`Fetch attempt ${i + 1} failed:`, e);
+        if (i === maxRetries - 1) throw e;
+      }
+    }
+
+    if (!response || !response.ok) {
+      const errorText = await response?.text();
+      console.error(`Gemini API error: ${response?.status} - ${errorText}`);
       return NextResponse.json({ error: 'Failed to analyze symptoms. Please try again later.' }, { status: 500 });
     }
 
     const data = await response.json();
     const generatedText = data.candidates?.[0]?.content?.parts?.[0]?.text;
 
-    // Handle cases where the API returns an empty or invalid response
     if (!generatedText) {
       console.error('Invalid or empty response from analysis service:', data);
       return NextResponse.json({ error: 'Invalid response from analysis service' }, { status: 500 });
     }
 
-    // Parse the JSON from the AI's text
     const analysis = extractJsonFromResponse(generatedText);
 
     if (!analysis) {
@@ -729,7 +747,6 @@ Limit possible conditions and advice to 3-5 items each. Ensure accuracy, neutral
       return NextResponse.json({ error: 'Failed to parse analysis results' }, { status: 500 });
     }
 
-    // Return the successful analysis
     return NextResponse.json(analysis);
   } catch (error) {
     console.error('Symptom analyzer error:', error);
