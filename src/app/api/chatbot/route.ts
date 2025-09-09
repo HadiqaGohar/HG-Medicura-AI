@@ -73,11 +73,6 @@
 
 
 
-
-
-
-
-
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
@@ -129,16 +124,24 @@ export async function POST(req: NextRequest) {
 
     // Return the chatbot response
     return NextResponse.json(data);
-  } catch (error) {
-    // Log detailed error information
-    console.error('Fetch error:', {
-      message: error.message,
-      name: error.name,
-      stack: error.stack,
-    });
-    return NextResponse.json(
-      { error: `Failed to connect to backend: ${error.message}` },
-      { status: 500 }
-    );
+  } catch (error: unknown) {
+    // Handle the error with type checking
+    let errorMessage = 'Failed to connect to backend';
+    let errorDetails = {};
+
+    if (error instanceof Error) {
+      errorDetails = {
+        message: error.message,
+        name: error.name,
+        stack: error.stack,
+      };
+      errorMessage = `Failed to connect to backend: ${error.message}`;
+    } else {
+      errorDetails = { message: String(error) };
+      errorMessage = `Failed to connect to backend: ${String(error)}`;
+    }
+
+    console.error('Fetch error:', errorDetails);
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
