@@ -1201,7 +1201,10 @@ const Chatbot: React.FC = () => {
   ];
 
   // API base URL
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+  // const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+  
+// NEW CODE (Replace with this):
+const API_BASE_URL = ''; // Empty string for relative path
 
   useEffect(() => {
     // Initialize with welcome message
