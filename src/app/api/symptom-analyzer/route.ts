@@ -875,7 +875,6 @@
 
 
 
-
 // src/app/api/symptom-analyzer/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -920,11 +919,11 @@ function checkRateLimit(ip: string): { allowed: boolean; remaining: number } {
   return { allowed: true, remaining: RATE_LIMIT.maxRequests - record.count };
 }
 
-function validateSymptoms(symptoms): string[] | null {
+function validateSymptoms(symptoms: unknown): string[] | null {
   if (!Array.isArray(symptoms)) return null;
   
   const validSymptoms = symptoms.filter(
-    symptom => typeof symptom === 'string' && symptom.trim().length > 0
+    (symptom: unknown) => typeof symptom === 'string' && symptom.trim().length > 0
   );
   
   return validSymptoms.length > 0 ? validSymptoms : null;
@@ -958,7 +957,8 @@ export async function POST(request: NextRequest) {
     let body: RequestBody;
     try {
       body = await request.json();
-    } catch () {
+    } catch (parseError) {
+      console.error('JSON parse error:', parseError);
       return NextResponse.json(
         { error: 'Invalid JSON in request body' },
         { status: 400 }
@@ -1014,6 +1014,9 @@ Rules:
     // Call Gemini API
     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`;
     
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000);
+    
     const response = await fetch(apiUrl, {
       method: 'POST',
       headers: {
@@ -1050,8 +1053,10 @@ Rules:
           }
         ]
       }),
-      signal: AbortSignal.timeout(30000) // 30 second timeout
+      signal: controller.signal
     });
+
+    clearTimeout(timeoutId);
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -1122,10 +1127,10 @@ Rules:
       }
     });
 
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Symptom analyzer error:', error);
     
-    if (error.name === 'AbortError' || error.name === 'TimeoutError') {
+    if (error instanceof Error && (error.name === 'AbortError' || error.name === 'TimeoutError')) {
       return NextResponse.json(
         { error: 'Request timeout. Please try again.' },
         { status: 504 }
