@@ -15,6 +15,7 @@ export const config = {
   // ]
     // matcher: ["/((?!api|_next|auth).*)"]
   matcher: [
+      "/services", 
     '/services/:path*', // sirf /services aur uske subroutes protect honge
   ],
 }
