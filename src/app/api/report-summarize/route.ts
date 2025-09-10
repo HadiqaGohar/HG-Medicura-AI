@@ -70,11 +70,10 @@
 
 // src/app/api/report-summarize/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { extractText } from 'pdf-parse'; // Hypothetical server-side PDF parsing (requires implementation)
 
 interface ReportSummaryRequest {
   text?: string;
-  file?: Buffer; // For PDF uploads
+  file?: File; // For PDF uploads
   language?: string;
 }
 
@@ -103,37 +102,28 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    let reportText = text || '';
-    if (file) {
-      // Convert File to Buffer for pdf-parse (server-side)
-      const arrayBuffer = await file.arrayBuffer();
-      const buffer = Buffer.from(arrayBuffer);
-      const pdfData = await extractText(buffer); // Requires pdf-parse implementation
-      reportText = pdfData.text || '';
-      if (!reportText.trim()) {
-        return NextResponse.json(
-          { error: 'Failed to extract text from PDF' },
-          { status: 400 }
-        );
-      }
-    }
-
     const FASTAPI_URL = process.env.NEXT_PUBLIC_FASTAPI_URL || 'https://hg-medicura-ai-backend-production.up.railway.app';
     const targetUrl = `${FASTAPI_URL}/api/health/report-summarize`;
 
     console.log('[Report Summary API] Fetching URL:', targetUrl);
-    console.log('[Report Summary API] Request body:', { text: reportText, language });
+    console.log('[Report Summary API] Request body:', { text, file: file ? file.name : null, language });
+
+    // Prepare form data for backend
+    const backendFormData = new FormData();
+    if (file) {
+      backendFormData.append('file', file);
+    }
+    if (text) {
+      backendFormData.append('text', text.trim());
+    }
+    backendFormData.append('language', language);
 
     const backendResponse = await fetch(targetUrl, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
         'Origin': 'https://hg-medicura-ai.vercel.app',
       },
-      body: JSON.stringify({
-        text: reportText.trim(),
-        language,
-      }),
+      body: backendFormData,
     });
 
     console.log('[Report Summary API] Backend response status:', backendResponse.status);
