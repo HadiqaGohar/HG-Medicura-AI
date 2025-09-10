@@ -3,37 +3,71 @@
 import React from "react";
 
 // CV, Resume, and AI job-related topics
+// const topRowPills = [
+//   "AI-Powered Resume Builder",
+//   "ATS-Friendly CV Templates",
+//   "Professional Resume Design",
+//   "Career Objective Writing",
+//   "Skills Section Optimization",
+//   "Work Experience Formatting",
+//   "Achievement Quantification",
+//   "Industry-Specific Resumes",
+// ];
+
+// const midRowPills = [
+//   "Executive CV Creation",
+//   "Technical Skills Showcase",
+//   "Leadership Experience Highlighting",
+//   "Career Gap Solutions",
+//   "Professional Summary Writing",
+//   "Education Section Enhancement",
+//   "Certification Placement",
+//   "Portfolio Integration",
+// ];
+
+// const bottomRowPills = [
+//   "Interview Preparation Guide",
+//   "Salary Negotiation Tips",
+//   "LinkedIn Profile Optimization",
+//   "Cover Letter Automation",
+//   "Job Market Analysis",
+//   "Career Transition Support",
+//   "Personal Branding Strategy",
+//   "AI Job Matching",
+// ];
+
+// Medical & Healthcare related topics
 const topRowPills = [
-  "AI-Powered Resume Builder",
-  "ATS-Friendly CV Templates",
-  "Professional Resume Design",
-  "Career Objective Writing",
-  "Skills Section Optimization",
-  "Work Experience Formatting",
-  "Achievement Quantification",
-  "Industry-Specific Resumes",
+  "AI Symptom Analyzer",
+  "Drug Interaction Checker",
+  "Medical Report Summarizer",
+  "Emergency Contact Assistance",
+  "Chronic Disease Monitoring",
+  "Health Risk Prediction",
+  "Nutrition & Diet Guidance",
+  "Personalized Health Tips",
 ];
 
 const midRowPills = [
-  "Executive CV Creation",
-  "Technical Skills Showcase",
-  "Leadership Experience Highlighting",
-  "Career Gap Solutions",
-  "Professional Summary Writing",
-  "Education Section Enhancement",
-  "Certification Placement",
-  "Portfolio Integration",
+  "Cancer Stage Detection",
+  "Diabetes Management",
+  "Heart Disease Risk",
+  "Skin Condition Analyzer",
+  "Allergy & Immunology",
+  "Infection Tracker",
+  "Lab Test Interpretation",
+  "Medication Reminder System",
 ];
 
 const bottomRowPills = [
-  "Interview Preparation Guide",
-  "Salary Negotiation Tips",
-  "LinkedIn Profile Optimization",
-  "Cover Letter Automation",
-  "Job Market Analysis",
-  "Career Transition Support",
-  "Personal Branding Strategy",
-  "AI Job Matching",
+  "Telemedicine Support",
+  "Mental Health Screening",
+  "Fitness & Activity Tracking",
+  "Sleep Pattern Analysis",
+  "Blood Pressure Monitoring",
+  "Vaccination Records",
+  "Pediatric Health Guide",
+  "Women’s Health Support",
 ];
 
 export default function MovingPills() {
