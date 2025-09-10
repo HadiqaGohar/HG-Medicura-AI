@@ -1,3 +1,4 @@
+
 // // src/app/services/drug-interaction/page.tsx
 // "use client";
 
@@ -28,87 +29,6 @@
 //   disclaimer: string;
 //   error?: string;
 // }
-
-// // Mock data for common medication interactions
-// const mockInteractionData: Record<string, DrugInteractionResponse> = {
-//   "panadol,ibuprofen": {
-//     interactions: [
-//       {
-//         medications: ["Panadol (Acetaminophen)", "Ibuprofen"],
-//         severity: "medium",
-//         description:
-//           "Taking these pain relievers together may increase the risk of gastrointestinal bleeding and kidney damage with long-term use.",
-//         recommendation:
-//           "Use these medications together only under medical supervision. Space doses appropriately and avoid regular combined use.",
-//       },
-//     ],
-//     recommendations: [
-//       "Take these medications with food to reduce stomach irritation",
-//       "Do not exceed the recommended dosage of either medication",
-//       "Monitor for signs of stomach pain or dark stools",
-//     ],
-//     alternative_options: [
-//       "Consider using one medication at a time rather than both together",
-//       "Ask your doctor about alternative pain relief options",
-//     ],
-//     general_advice: [
-//       "Always follow recommended dosages for over-the-counter medications",
-//       "Inform your doctor if you need to use these medications regularly",
-//       "Avoid alcohol when taking these medications",
-//     ],
-//     disclaimer:
-//       "This information is for educational purposes only. Always consult healthcare professionals for medical advice.",
-//   },
-//   "aspirin,ibuprofen": {
-//     interactions: [
-//       {
-//         medications: ["Aspirin", "Ibuprofen"],
-//         severity: "high",
-//         description:
-//           "Ibuprofen may reduce the cardiovascular benefits of aspirin when taken regularly. These medications also increase the risk of gastrointestinal bleeding when combined.",
-//         recommendation:
-//           "Take ibuprofen at least 30 minutes after or 8 hours before aspirin. Consider alternative pain relievers if you take aspirin for heart protection.",
-//       },
-//     ],
-//     recommendations: [
-//       "Do not take these medications together without medical advice",
-//       "If you take aspirin for heart health, consult your doctor before using ibuprofen",
-//     ],
-//     alternative_options: [
-//       "Acetaminophen (Panadol) may be a safer alternative to ibuprofen",
-//       "Topical pain relievers for localized pain",
-//     ],
-//     general_advice: [
-//       "Always inform your doctor about all medications you're taking",
-//       "Read labels carefully as many products contain these ingredients",
-//     ],
-//     disclaimer:
-//       "This information is for educational purposes only. Always consult healthcare professionals for medical advice.",
-//   },
-//   default: {
-//     interactions: [
-//       {
-//         medications: ["Medications"],
-//         severity: "low",
-//         description:
-//           "No significant interactions found based on available information.",
-//         recommendation:
-//           "Always follow recommended dosages and consult a healthcare provider with concerns.",
-//       },
-//     ],
-//     recommendations: [
-//       "Take medications as directed on the label or by your healthcare provider",
-//       "Be aware of potential side effects",
-//     ],
-//     alternative_options: [],
-//     general_advice: [
-//       "Keep a list of all your medications and share it with your healthcare providers",
-//       "Read medication labels carefully",
-//     ],
-//     disclaimer:
-//       "This information is for educational purposes only. Always consult healthcare professionals for medical advice.",
-//   },
-// };
 
 // export default function DrugInteraction() {
 //   const [medications, setMedications] = useState<string[]>([]);
@@ -141,46 +61,73 @@
 //     setResults(null);
 
 //     try {
-//       // In a real application, you would call your API here:
-//       // const response = await fetch('/api/drug-interaction', {
-//       //   method: 'POST',
-//       //   headers: { 'Content-Type': 'application/json' },
-//       //   body: JSON.stringify({ medications }),
-//       // });
-//       // const data = await response.json();
-
-//       // For demo purposes, using mock data with a delay
-//       await new Promise((resolve) => setTimeout(resolve, 1500));
-
-//       // Create a key for looking up mock interactions
-//       const medKey = medications.sort().join(",");
-
-//       // Find matching interaction data or use default
-//       const interactionData =
-//         mockInteractionData[medKey] || mockInteractionData.default;
-
-//       // Update medication names to match user input
-//       const updatedInteractions = interactionData.interactions.map(
-//         (interaction) => {
-//           // Replace medication names with the actual user input (capitalized)
-//           const userMedNames = medications.map(
-//             (med) => med.charAt(0).toUpperCase() + med.slice(1)
-//           );
-
-//           return {
-//             ...interaction,
-//             medications: userMedNames,
-//           };
-//         }
-//       );
-
-//       setResults({
-//         ...interactionData,
-//         interactions: updatedInteractions,
+//       const response = await fetch('/api/drug-interaction', {
+//         method: 'POST',
+//         headers: { 'Content-Type': 'application/json' },
+//         body: JSON.stringify({ medications }),
 //       });
+      
+//       if (!response.ok) {
+//         throw new Error(`Server responded with status: ${response.status}`);
+//       }
+      
+//       const data = await response.json();
+      
+//       // Ensure the response has the expected structure
+//       const formattedData: DrugInteractionResponse = {
+//         interactions: Array.isArray(data.interactions) ? data.interactions : [],
+//         recommendations: Array.isArray(data.recommendations) ? data.recommendations : [],
+//         alternative_options: Array.isArray(data.alternative_options) ? data.alternative_options : [],
+//         general_advice: Array.isArray(data.general_advice) ? data.general_advice : [],
+//         disclaimer: data.disclaimer || "This information is for educational purposes only. Always consult healthcare professionals for medical advice."
+//       };
+      
+//       setResults(formattedData);
 //     } catch (err) {
 //       setError("Failed to check interactions. Please try again.");
 //       console.error(err);
+      
+//       // Fallback minimal response
+//       // setResults({
+//       //   interactions: [{
+//       //     medications: medications.map(m => m.charAt(0).toUpperCase() + m.slice(1)),
+//       //     severity: "none",
+//       //     description: "Service temporarily unavailable. Please consult a healthcare provider for accurate interaction information.",
+//       //     recommendation: "Always consult with a pharmacist or doctor before combining medications."
+//       //   }],
+//       //   recommendations: [
+//       //     "Consult a healthcare professional for accurate interaction information",
+//       //     "Keep a list of all your medications"
+//       //   ],
+//       //   alternative_options: [],
+//       //   general_advice: [
+//       //     "Always inform your doctor about all medications you take",
+//       //     "Read medication guides carefully"
+//       //   ],
+//       //   disclaimer: "This information is for educational purposes only. Always consult healthcare professionals for medication advice."
+//       // });
+//       setResults({
+//   interactions: [{
+//     medications: medications.map(m => m.charAt(0).toUpperCase() + m.slice(1)),
+//     severity: "none",
+//     description: "Unable to retrieve interaction data due to service unavailability. Based on general pharmacological knowledge, penicillin and sulfa drugs (sulfonamides) typically have no significant interactions, as they target different bacterial processes (cell wall synthesis vs. folate synthesis). However, patients with sulfa allergies may have a higher risk of penicillin sensitivity.",
+//     recommendation: "Consult a healthcare provider to confirm the safety of combining these medications and assess allergy history."
+//   }],
+//   recommendations: [
+//     "Consult a healthcare professional to verify no interactions and review patient-specific factors (e.g., allergy history).",
+//     "Monitor for allergic reactions (e.g., rash, hives, anaphylaxis) when initiating penicillin or sulfa drugs.",
+//     "Keep a detailed list of all medications and share it with your healthcare provider."
+//   ],
+//   alternative_options: [
+//     "Consider alternative antibiotics like macrolides (e.g., azithromycin) or tetracyclines (e.g., doxycycline) if allergies are a concern, based on the infection type."
+//   ],
+//   general_advice: [
+//     "Always inform your doctor about all medications, including over-the-counter drugs and supplements.",
+//     "Read medication guides and report any side effects to your healthcare provider.",
+//     "Consider allergy testing if there’s a history of sensitivity to penicillin or sulfa drugs."
+//   ],
+//   disclaimer: "This information is for educational purposes only. Always consult healthcare professionals for accurate medication advice."
+// });
 //     } finally {
 //       setIsLoading(false);
 //     }
@@ -227,27 +174,11 @@
 //   return (
 //     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-gray-100 py-8 px-4">
 //       <div className="max-w-4xl mx-auto">
-//         {/* <div className="text-center mb-8">
-//           <div className="w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
-//             <FaPills className="w-10 h-10 text-white" />
-//           </div>
-//           <h1 className={`${anton.className} text-gray-800 text-5xl md:text-6xl mb-4 leading-tight`}>
-//             Drug Interaction Checker
-//           </h1>
-//           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-//             Enter medication names to check for potential interactions
-//           </p>
-//         </div> */}
-
 //         <div className="text-center mb-12">
-//           <div className="w-16 h-16 bg-gradient-to-r from-blue-500  to-blue-400 rounded-full flex items-center justify-center mx-auto mb-6">
+//           <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-blue-400 rounded-full flex items-center justify-center mx-auto mb-6">
 //             <FaPills className="w-8 h-8 text-white" />
 //           </div>
-//           <h3
-//             className={`${anton.className} mt-6 text-gray-800 text-4xl md:text-5xl mb-6 leading-tight`}
-//           >
-//             {/* className="text-4xl md:text-5xl font-bold text-gray-800 mb-4"> */}
-//             {/* Frequently Asked Questions */}
+//           <h3 className={`${anton.className} mt-6 text-gray-800 text-4xl md:text-5xl mb-6 leading-tight`}>
 //             Drug Interaction Checker
 //           </h3>
 //           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
@@ -324,7 +255,7 @@
 //           <button
 //             onClick={checkInteractions}
 //             disabled={isLoading || medications.length === 0}
-//             className="w-full py-4 bg-gradient-to-r from-blue-600 to-blue-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-semibold text-lg flex items-center justify-center shadow-md hover:shadow-lg"
+//             className="w-full py-4 bg-gradient-to-r from-blue-600 to-blue-600 text-white rounded-lg hover:from-blue-700 hover:to-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-semibold text-lg flex items-center justify-center shadow-md hover:shadow-lg"
 //           >
 //             {isLoading ? (
 //               <>
@@ -395,7 +326,7 @@
 //                   No significant interactions found
 //                 </h3>
 //                 <p className="text-green-700">
-//                   The medications you entered don't appear to have significant
+//                   The medications you entered don&apos;t appear to have significant
 //                   interactions based on available information.
 //                 </p>
 //               </div>
@@ -418,21 +349,20 @@
 //             )}
 
 //             {/* Alternative Options */}
-//             {results.alternative_options &&
-//               results.alternative_options.length > 0 && (
-//                 <div className="mb-6">
-//                   <h3 className="text-lg font-semibold text-gray-700 mb-3">
-//                     Alternative Options:
-//                   </h3>
-//                   <ul className="list-disc list-inside space-y-2 pl-5">
-//                     {results.alternative_options.map((option, index) => (
-//                       <li key={index} className="text-gray-700">
-//                         {option}
-//                       </li>
-//                     ))}
-//                   </ul>
-//                 </div>
-//               )}
+//             {results.alternative_options && results.alternative_options.length > 0 && (
+//               <div className="mb-6">
+//                 <h3 className="text-lg font-semibold text-gray-700 mb-3">
+//                   Alternative Options:
+//                 </h3>
+//                 <ul className="list-disc list-inside space-y-2 pl-5">
+//                   {results.alternative_options.map((option, index) => (
+//                     <li key={index} className="text-gray-700">
+//                       {option}
+//                     </li>
+//                   ))}
+//                 </ul>
+//               </div>
+//             )}
 
 //             {/* General Advice */}
 //             {results.general_advice && results.general_advice.length > 0 && (
@@ -483,10 +413,10 @@
 //                 What to discuss with your doctor
 //               </h4>
 //               <ul className="text-blue-900 text-sm list-disc list-inside pl-2">
-//                 <li>All medications you're taking</li>
+//                 <li>All medications you&apos;re taking</li>
 //                 <li>Any supplements or vitamins</li>
 //                 <li>Changes in your health status</li>
-//                 <li>Side effects you're experiencing</li>
+//                 <li>Side effects you&apos;re experiencing</li>
 //               </ul>
 //             </div>
 //           </div>
@@ -495,18 +425,15 @@
 //     </div>
 //   );
 // }
+
+
+
 // src/app/services/drug-interaction/page.tsx
 "use client";
 
 import { Anton } from "next/font/google";
 import { useState, useEffect, useRef } from "react";
-import {
-  FaPills,
-  FaPlus,
-  FaTimes,
-  FaExclamationTriangle,
-  FaInfoCircle,
-} from "react-icons/fa";
+import { FaPills, FaPlus, FaTimes, FaExclamationTriangle, FaInfoCircle } from "react-icons/fa";
 
 const anton = Anton({ weight: "400", subsets: ["latin"] });
 
@@ -562,68 +489,48 @@ export default function DrugInteraction() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ medications }),
       });
-      
+
       if (!response.ok) {
-        throw new Error(`Server responded with status: ${response.status}`);
+        const errorData = await response.json();
+        throw new Error(errorData.error || `Server responded with status: ${response.status}`);
       }
-      
-      const data = await response.json();
-      
-      // Ensure the response has the expected structure
+
+      const data: DrugInteractionResponse = await response.json();
+
+      // Validate response structure
       const formattedData: DrugInteractionResponse = {
         interactions: Array.isArray(data.interactions) ? data.interactions : [],
         recommendations: Array.isArray(data.recommendations) ? data.recommendations : [],
         alternative_options: Array.isArray(data.alternative_options) ? data.alternative_options : [],
         general_advice: Array.isArray(data.general_advice) ? data.general_advice : [],
-        disclaimer: data.disclaimer || "This information is for educational purposes only. Always consult healthcare professionals for medical advice."
+        disclaimer: data.disclaimer || "This information is for educational purposes only. Always consult healthcare professionals for medical advice.",
+        error: data.error,
       };
-      
+
       setResults(formattedData);
     } catch (err) {
       setError("Failed to check interactions. Please try again.");
-      console.error(err);
-      
-      // Fallback minimal response
-      // setResults({
-      //   interactions: [{
-      //     medications: medications.map(m => m.charAt(0).toUpperCase() + m.slice(1)),
-      //     severity: "none",
-      //     description: "Service temporarily unavailable. Please consult a healthcare provider for accurate interaction information.",
-      //     recommendation: "Always consult with a pharmacist or doctor before combining medications."
-      //   }],
-      //   recommendations: [
-      //     "Consult a healthcare professional for accurate interaction information",
-      //     "Keep a list of all your medications"
-      //   ],
-      //   alternative_options: [],
-      //   general_advice: [
-      //     "Always inform your doctor about all medications you take",
-      //     "Read medication guides carefully"
-      //   ],
-      //   disclaimer: "This information is for educational purposes only. Always consult healthcare professionals for medication advice."
-      // });
+      console.error('[Drug Interaction] Error:', err);
       setResults({
-  interactions: [{
-    medications: medications.map(m => m.charAt(0).toUpperCase() + m.slice(1)),
-    severity: "none",
-    description: "Unable to retrieve interaction data due to service unavailability. Based on general pharmacological knowledge, penicillin and sulfa drugs (sulfonamides) typically have no significant interactions, as they target different bacterial processes (cell wall synthesis vs. folate synthesis). However, patients with sulfa allergies may have a higher risk of penicillin sensitivity.",
-    recommendation: "Consult a healthcare provider to confirm the safety of combining these medications and assess allergy history."
-  }],
-  recommendations: [
-    "Consult a healthcare professional to verify no interactions and review patient-specific factors (e.g., allergy history).",
-    "Monitor for allergic reactions (e.g., rash, hives, anaphylaxis) when initiating penicillin or sulfa drugs.",
-    "Keep a detailed list of all medications and share it with your healthcare provider."
-  ],
-  alternative_options: [
-    "Consider alternative antibiotics like macrolides (e.g., azithromycin) or tetracyclines (e.g., doxycycline) if allergies are a concern, based on the infection type."
-  ],
-  general_advice: [
-    "Always inform your doctor about all medications, including over-the-counter drugs and supplements.",
-    "Read medication guides and report any side effects to your healthcare provider.",
-    "Consider allergy testing if there’s a history of sensitivity to penicillin or sulfa drugs."
-  ],
-  disclaimer: "This information is for educational purposes only. Always consult healthcare professionals for accurate medication advice."
-});
+        interactions: [
+          {
+            medications: medications.map((m) => m.charAt(0).toUpperCase() + m.slice(1)),
+            severity: "none",
+            description: "Unable to retrieve interaction data. Please consult a healthcare provider.",
+            recommendation: "Always consult with a pharmacist or doctor before combining medications.",
+          },
+        ],
+        recommendations: [
+          "Consult a healthcare professional for accurate interaction information.",
+          "Keep a list of all your medications.",
+        ],
+        alternative_options: [],
+        general_advice: [
+          "Always inform your doctor about all medications you take.",
+          "Read medication guides carefully.",
+        ],
+        disclaimer: "This information is for educational purposes only. Always consult healthcare professionals for medication advice.",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -707,8 +614,7 @@ export default function DrugInteraction() {
               </button>
             </div>
             <p className="text-xs text-gray-500 mt-2">
-              Press Enter or click + to add medications. Include both
-              prescription and over-the-counter drugs.
+              Press Enter or click + to add medications. Include both prescription and over-the-counter drugs.
             </p>
           </div>
 
@@ -768,14 +674,10 @@ export default function DrugInteraction() {
         {results && (
           <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
             <h2 className="text-2xl font-bold text-gray-800 mb-2 flex items-center">
-              <FaInfoCircle className="text-blue-500 mr-2" /> Interaction
-              Results
+              <FaInfoCircle className="text-blue-500 mr-2" /> Interaction Results
             </h2>
             <p className="text-gray-600 mb-6">
-              Based on{" "}
-              {medications
-                .map((m) => m.charAt(0).toUpperCase() + m.slice(1))
-                .join(", ")}
+              Based on {medications.map((m) => m.charAt(0).toUpperCase() + m.slice(1)).join(", ")}
             </p>
 
             {/* Interactions */}
@@ -788,14 +690,10 @@ export default function DrugInteraction() {
                   {results.interactions.map((interaction, index) => (
                     <div
                       key={index}
-                      className={`p-4 border rounded-lg ${getSeverityColor(
-                        interaction.severity
-                      )}`}
+                      className={`p-4 border rounded-lg ${getSeverityColor(interaction.severity)}`}
                     >
                       <div className="flex items-center mb-2">
-                        <span className="font-bold text-lg">
-                          {interaction.medications.join(" + ")}
-                        </span>
+                        <span className="font-bold text-lg">{interaction.medications.join(" + ")}</span>
                       </div>
                       <div className="mb-3">
                         <span
@@ -808,9 +706,7 @@ export default function DrugInteraction() {
                       </div>
                       <p className="mb-2">{interaction.description}</p>
                       {interaction.recommendation && (
-                        <p className="mt-3 font-medium">
-                          Recommendation: {interaction.recommendation}
-                        </p>
+                        <p className="mt-3 font-medium">Recommendation: {interaction.recommendation}</p>
                       )}
                     </div>
                   ))}
@@ -822,8 +718,7 @@ export default function DrugInteraction() {
                   No significant interactions found
                 </h3>
                 <p className="text-green-700">
-                  The medications you entered don&apos;t appear to have significant
-                  interactions based on available information.
+                  The medications you entered don&apos;t appear to have significant interactions based on available information.
                 </p>
               </div>
             )}
@@ -899,9 +794,7 @@ export default function DrugInteraction() {
                 Why check drug interactions?
               </h4>
               <p className="text-blue-900 text-sm">
-                Medications, supplements, and even foods can interact in ways
-                that affect how your treatments work. Some interactions can
-                increase side effects or decrease effectiveness.
+                Medications, supplements, and even foods can interact in ways that affect how your treatments work. Some interactions can increase side effects or decrease effectiveness.
               </p>
             </div>
             <div>
