@@ -1,4 +1,3 @@
-
 // // src/app/api/drug-interaction/route.ts
 // import { NextRequest, NextResponse } from 'next/server';
 
@@ -25,6 +24,7 @@
 //   alternative_options: string[];
 //   general_advice: string[];
 //   disclaimer: string;
+//   summary?: string;
 //   error?: string;
 // }
 
@@ -67,7 +67,18 @@
 
 //     if (!backendResponse.ok) {
 //       return NextResponse.json(
-//         { error: backendData.detail || 'Failed to check drug interactions' },
+//         {
+//           error: backendData.detail || 'Failed to check drug interactions',
+//           interactions: [],
+//           recommendations: ['Consult a healthcare professional for accurate interaction information.'],
+//           alternative_options: [],
+//           general_advice: [
+//             'Always inform your doctor about all medications you take.',
+//             'Read medication guides carefully.',
+//           ],
+//           disclaimer: 'This information is for educational purposes only. Always consult healthcare professionals for medication advice.',
+//           summary: '',
+//         },
 //         { status: backendResponse.status }
 //       );
 //     }
@@ -81,7 +92,7 @@
 //       Unknown: 'none',
 //     };
 
-//     // Transform backend response to match frontend's expected structure
+//     // Transform backend response
 //     const formattedData: DrugInteractionResponse = {
 //       interactions: [
 //         {
@@ -102,9 +113,8 @@
 //         'Keep a current medication list with you.',
 //         'Read medication guides carefully.',
 //       ],
-//       disclaimer:
-//         backendData.disclaimer ||
-//         'This information is for educational purposes only. Always consult healthcare professionals for medication advice.',
+//       disclaimer: backendData.disclaimer || 'This information is for educational purposes only. Always consult healthcare professionals for medication advice.',
+//       summary: backendData.summary || '',
 //       error: backendData.error,
 //     };
 
@@ -120,8 +130,8 @@
 //           'Always inform your doctor about all medications you take.',
 //           'Read medication guides carefully.',
 //         ],
-//         disclaimer:
-//           'This information is for educational purposes only. Always consult healthcare professionals for medication advice.',
+//         disclaimer: 'This information is for educational purposes only. Always consult healthcare professionals for medication advice.',
+//         summary: '',
 //         error: 'Failed to check drug interactions. Please try again later.',
 //       },
 //       { status: 500 }
@@ -165,7 +175,7 @@ interface DrugInteractionResponse {
   alternative_options: string[];
   general_advice: string[];
   disclaimer: string;
-  summary?: string;
+  summary: string;
   error?: string;
 }
 
@@ -181,11 +191,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Normalize medication names (e.g., fix typos like "Vitamn b")
+    const normalizedMedications = medications.map(med => 
+      med.toLowerCase().trim().replace('vitamn', 'vitamin')
+    );
+
     const FASTAPI_URL = process.env.NEXT_PUBLIC_FASTAPI_URL || 'https://hg-medicura-ai-backend-production.up.railway.app';
     const targetUrl = `${FASTAPI_URL}/api/health/drug-interactions`;
 
     console.log('[Drug Interaction API] Fetching URL:', targetUrl);
-    console.log('[Drug Interaction API] Request body:', body);
+    console.log('[Drug Interaction API] Request body:', { ...body, medications: normalizedMedications });
 
     const backendResponse = await fetch(targetUrl, {
       method: 'POST',
@@ -194,7 +209,7 @@ export async function POST(request: NextRequest) {
         'Origin': 'https://hg-medicura-ai.vercel.app',
       },
       body: JSON.stringify({
-        medications,
+        medications: normalizedMedications,
         age,
         gender,
         existing_conditions,
@@ -237,10 +252,12 @@ export async function POST(request: NextRequest) {
     const formattedData: DrugInteractionResponse = {
       interactions: [
         {
-          medications: backendData.medications || medications,
+          medications: backendData.medications || normalizedMedications,
           severity: severityMap[backendData.severity] || 'none',
-          description: backendData.detailed_analysis || 'No significant interactions found.',
-          recommendation: backendData.recommendations?.[0] || 'Consult a healthcare provider.',
+          description: backendData.detailed_analysis || backendData.summary || 'No significant interactions found.',
+          recommendation: Array.isArray(backendData.recommendations) && backendData.recommendations.length > 0
+            ? backendData.recommendations[0]
+            : 'Consult a healthcare provider.',
         },
       ],
       recommendations: Array.isArray(backendData.recommendations)
@@ -249,13 +266,15 @@ export async function POST(request: NextRequest) {
       alternative_options: Array.isArray(backendData.alternative_options)
         ? backendData.alternative_options
         : [],
-      general_advice: [
-        'Always inform your doctor about all medications you take.',
-        'Keep a current medication list with you.',
-        'Read medication guides carefully.',
-      ],
+      general_advice: Array.isArray(backendData.recommendations)
+        ? backendData.recommendations.slice(1) // Use additional recommendations as general advice
+        : [
+            'Always inform your doctor about all medications you take.',
+            'Keep a current medication list with you.',
+            'Read medication guides carefully.',
+          ],
       disclaimer: backendData.disclaimer || 'This information is for educational purposes only. Always consult healthcare professionals for medication advice.',
-      summary: backendData.summary || '',
+      summary: backendData.summary || 'No summary available.',
       error: backendData.error,
     };
 
