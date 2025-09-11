@@ -25,7 +25,7 @@ export default function Main() {
       
       <MovingSeparation/>
       <FAQ/>
-              <BugReportButton />
+{/*               <BugReportButton /> */}
     </div>
   )
 }
