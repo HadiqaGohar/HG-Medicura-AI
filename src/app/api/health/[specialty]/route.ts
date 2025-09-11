@@ -2,20 +2,21 @@ import { NextRequest, NextResponse } from 'next/server';
 
 // Define the expected params type
 interface RouteParams {
-  params: {
-    specialty: string;
-  };
+  params: Promise<{ specialty: string }>;
 }
 
 export async function POST(req: NextRequest, context: RouteParams) {
   try {
+    // Resolve the params Promise
+    const { specialty } = await context.params;
+    console.log(`[${specialty} API] Request body:`, await req.json());
+
     // Parse the request body
     const body = await req.json();
-    console.log(`[${context.params.specialty} API] Request body:`, body);
 
     // Validate the request body
     if (!body.symptoms || !Array.isArray(body.symptoms) || body.symptoms.length === 0) {
-      console.log(`[${context.params.specialty} API] Validation failed: Symptoms are required`);
+      console.log(`[${specialty} API] Validation failed: Symptoms are required`);
       return NextResponse.json(
         { error: 'Symptoms are required and must be a non-empty array' },
         { status: 400 }
@@ -25,7 +26,7 @@ export async function POST(req: NextRequest, context: RouteParams) {
     // Get backend URL from environment
     const FASTAPI_URL = process.env.NEXT_PUBLIC_FASTAPI_URL;
     if (!FASTAPI_URL) {
-      console.error(`[${context.params.specialty} API] Environment variable NEXT_PUBLIC_FASTAPI_URL is not set`);
+      console.error(`[${specialty} API] Environment variable NEXT_PUBLIC_FASTAPI_URL is not set`);
       return NextResponse.json(
         { error: 'Server configuration error' },
         { status: 500 }
@@ -39,7 +40,6 @@ export async function POST(req: NextRequest, context: RouteParams) {
       'endocrinology', 'gastroenterology', 'radiology', 'infectious-disease', 'vaccination-advisor'
     ];
 
-    const specialty = context.params.specialty;
     if (!validSpecialties.includes(specialty)) {
       console.log(`[${specialty} API] Invalid specialty`);
       return NextResponse.json(
@@ -78,7 +78,8 @@ export async function POST(req: NextRequest, context: RouteParams) {
     // Return the response
     return NextResponse.json(responseData);
   } catch (error) {
-    console.error(`[${context.params.specialty} API] Error processing request:`, error);
+    // Use a generic specialty for error logging if params resolution fails
+    console.error('[Health API] Error processing request:', error);
     return NextResponse.json(
       { error: 'Internal server error. Please try again later.' },
       { status: 500 }
