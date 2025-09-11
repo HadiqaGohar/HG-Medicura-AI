@@ -71,11 +71,11 @@
 // src/app/api/report-summarize/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 
-interface ReportSummaryRequest {
-  text?: string;
-  file?: File; // For PDF uploads
-  language?: string;
-}
+// interface ReportSummaryRequest {
+//   text?: string;
+//   file?: File; // For PDF uploads
+//   language?: string;
+// }
 
 interface ReportSummaryResponse {
   summary: string;
