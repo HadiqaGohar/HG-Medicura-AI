@@ -28,7 +28,7 @@ export default function NotFound() {
             Go Home
           </Link>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+{/*           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link 
               href="/template"
               className="inline-flex items-center px-4 py-2 border border-blue-300 text-blue-600 rounded-lg hover:bg-purple-50 transition-colors"
@@ -44,7 +44,7 @@ export default function NotFound() {
               <FiArrowLeft className="mr-2" />
               Resume Builder
             </Link>
-          </div>
+          </div> */}
         </div>
         
         <div className="mt-12 text-sm text-gray-500">
