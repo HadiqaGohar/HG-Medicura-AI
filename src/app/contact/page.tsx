@@ -15,10 +15,12 @@ function Contact() {
 
   const options = [
     { value: "", label: "Select a topic" },
-    { value: "ResumeReview", label: "Resume Review" },
-    { value: "TemplateInquiry", label: "Template Inquiry" },
-    { value: "Support", label: "Support" },
-    { value: "FeatureRequest", label: "Feature Request" },
+    { value: "SymptomAnalyzer", label: "Symptom Analyzer" },
+    { value: "DrugInteraction", label: "Drug Interaction Check" },
+    { value: "MedicalTermLookup", label: "Medical Term Lookup" },
+    { value: "ReportSummarize", label: "Report Summarize" },
+    { value: "EmergencySupport", label: "Emergency Support" },
+    { value: "GeneralInquiry", label: "General Inquiry" },
   ];
 
   return (
