@@ -461,7 +461,7 @@ const Header = () => {
           </li>
 
           <li>
-            <Link href="/about" className='flex items-center hover:text-blue-600 transition-colors'>
+            <Link href="/about-us" className='flex items-center hover:text-blue-600 transition-colors'>
               <TbWorldQuestion className='mr-2'/> About
             </Link>
           </li>
