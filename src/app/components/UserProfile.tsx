@@ -4,7 +4,7 @@ import { useSession, signOut } from 'next-auth/react'
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { AiOutlineUser, AiOutlineLogout, AiOutlineSetting } from 'react-icons/ai'
-import { FiEdit3 } from 'react-icons/fi'
+// import { FiEdit3 } from 'react-icons/fi'
 import Image from 'next/image'
 
 export default function UserProfile() {
@@ -65,9 +65,9 @@ export default function UserProfile() {
             className="absolute right-0 mt-2 w-72 bg-white rounded-2xl shadow-2xl border border-gray-100 z-50 overflow-hidden"
           >
             {/* User Info Header */}
-            <div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 border-b border-gray-100">
+            <div className="p-4 bg-gradient-to-r from-blue-50 to-blue-100 border-b border-gray-100">
               <div className="flex items-center gap-3">
-                <div className="relative w-12 h-12 rounded-full overflow-hidden bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center">
+                <div className="relative w-12 h-12 rounded-full overflow-hidden bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center">
                   {session.user.image ? (
                     <Image
                       src={session.user.image}
@@ -110,7 +110,7 @@ export default function UserProfile() {
                 </div>
               </motion.button>
 
-              <motion.button
+{/*               <motion.button
                 whileHover={{ backgroundColor: '#f3f4f6' }}
                 onClick={() => {
                   setIsDropdownOpen(false)
@@ -125,7 +125,7 @@ export default function UserProfile() {
                   <p className="font-medium text-gray-800">My Resumes</p>
                   <p className="text-xs text-gray-500">Manage your resumes</p>
                 </div>
-              </motion.button>
+              </motion.button> */}
 
               <motion.button
                 whileHover={{ backgroundColor: '#f3f4f6' }}
