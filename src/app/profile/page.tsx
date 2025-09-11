@@ -613,7 +613,7 @@ export default function ProfilePage() {
               Easy Editing
             </div>
           </div>
-          <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-600 mx-auto mt-6 rounded-full"></div>
+          <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-blue-700 mx-auto mt-6 rounded-full"></div>
         </motion.div>
 
         {/* Profile Card */}
