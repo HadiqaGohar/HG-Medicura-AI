@@ -1,14 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function POST(req: NextRequest, { params }: { params: { specialty: string } }) {
+// Define the expected params type
+interface RouteParams {
+  params: {
+    specialty: string;
+  };
+}
+
+export async function POST(req: NextRequest, context: RouteParams) {
   try {
     // Parse the request body
     const body = await req.json();
-    console.log(`[${params.specialty} API] Request body:`, body);
+    console.log(`[${context.params.specialty} API] Request body:`, body);
 
     // Validate the request body
     if (!body.symptoms || !Array.isArray(body.symptoms) || body.symptoms.length === 0) {
-      console.log(`[${params.specialty} API] Validation failed: Symptoms are required`);
+      console.log(`[${context.params.specialty} API] Validation failed: Symptoms are required`);
       return NextResponse.json(
         { error: 'Symptoms are required and must be a non-empty array' },
         { status: 400 }
@@ -18,30 +25,31 @@ export async function POST(req: NextRequest, { params }: { params: { specialty: 
     // Get backend URL from environment
     const FASTAPI_URL = process.env.NEXT_PUBLIC_FASTAPI_URL;
     if (!FASTAPI_URL) {
-      console.error(`[${params.specialty} API] Environment variable NEXT_PUBLIC_FASTAPI_URL is not set`);
+      console.error(`[${context.params.specialty} API] Environment variable NEXT_PUBLIC_FASTAPI_URL is not set`);
       return NextResponse.json(
         { error: 'Server configuration error' },
         { status: 500 }
       );
     }
 
-    // Map specialty to endpoint
+    // Validate specialty
     const validSpecialties = [
       'cardiology', 'dermatology', 'neurology', 'pulmonology', 'ophthalmology',
       'dental', 'allergy-immunology', 'pediatrics', 'orthopedics', 'mental-health',
       'endocrinology', 'gastroenterology', 'radiology', 'infectious-disease', 'vaccination-advisor'
     ];
 
-    if (!validSpecialties.includes(params.specialty)) {
-      console.log(`[${params.specialty} API] Invalid specialty`);
+    const specialty = context.params.specialty;
+    if (!validSpecialties.includes(specialty)) {
+      console.log(`[${specialty} API] Invalid specialty`);
       return NextResponse.json(
-        { error: `Invalid specialty: ${params.specialty}` },
+        { error: `Invalid specialty: ${specialty}` },
         { status: 400 }
       );
     }
 
-    const targetUrl = `${FASTAPI_URL}/api/health/${params.specialty}`;
-    console.log(`[${params.specialty} API] Fetching URL:`, targetUrl);
+    const targetUrl = `${FASTAPI_URL}/api/health/${specialty}`;
+    console.log(`[${specialty} API] Fetching URL:`, targetUrl);
 
     // Forward the request to the FastAPI backend
     const response = await fetch(targetUrl, {
@@ -54,15 +62,15 @@ export async function POST(req: NextRequest, { params }: { params: { specialty: 
       cache: 'no-store',
     });
 
-    console.log(`[${params.specialty} API] Backend response status:`, response.status);
+    console.log(`[${specialty} API] Backend response status:`, response.status);
     const responseData = await response.json();
-    console.log(`[${params.specialty} API] Backend response:`, responseData);
+    console.log(`[${specialty} API] Backend response:`, responseData);
 
     // Check if the backend response is successful
     if (!response.ok) {
-      console.log(`[${params.specialty} API] Backend error:`, responseData);
+      console.log(`[${specialty} API] Backend error:`, responseData);
       return NextResponse.json(
-        { error: responseData.detail || `Failed to process ${params.specialty} query` },
+        { error: responseData.detail || `Failed to process ${specialty} query` },
         { status: response.status }
       );
     }
@@ -70,7 +78,7 @@ export async function POST(req: NextRequest, { params }: { params: { specialty: 
     // Return the response
     return NextResponse.json(responseData);
   } catch (error) {
-    console.error(`[${params.specialty} API] Error processing request:`, error);
+    console.error(`[${context.params.specialty} API] Error processing request:`, error);
     return NextResponse.json(
       { error: 'Internal server error. Please try again later.' },
       { status: 500 }
