@@ -624,7 +624,7 @@ export default function ProfilePage() {
           className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 overflow-hidden"
         >
           {/* Cover Section */}
-          <div className="h-32 bg-gradient-to-r from-blue-500 to-purple-600 relative">
+          <div className="h-32 bg-gradient-to-r from-blue-500 to-blue-600 relative">
             <div className="absolute -bottom-16 left-8">
               <div className="w-32 h-32 rounded-full border-4 border-white bg-white overflow-hidden shadow-lg">
                 {session.user.image ? (
