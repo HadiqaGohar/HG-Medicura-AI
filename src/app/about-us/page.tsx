@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import Image from "next/image";
 
@@ -9,27 +7,21 @@ export default function About() {
       {/* Hero Section */}
       <div className="relative w-full h-[400px]">
         <Image
-          src="/about-hero.jpg" // apni image path yahan daalna (public folder me rakhna)
-          alt="Medicura AI Team"
+          src="/about-hero.jpg" // Replace with your hero image path
+          alt="Team Celebrating"
           layout="fill"
           objectFit="cover"
           className="rounded-md"
         />
-
         <div className="absolute inset-0 bg-black/50 flex items-center justify-center text-center px-6">
           <div className="bg-white/90 p-6 rounded-lg shadow-lg max-w-2xl">
-            <h2 className="text-sm font-bold text-blue-600 uppercase">
-              About Us
-            </h2>
-            <hr className="w-16 border-4 border-blue-500 mb-4 rounded-full mx-auto" />
+            <h2 className="text-sm font-bold text-green-600 uppercase">About Us</h2>
+            <hr className="w-16 border-4 border-green-500 mb-4 rounded-full mx-auto" />
             <h3 className="text-2xl md:text-4xl font-semibold text-gray-800 leading-snug">
-              We are a team of healthcare innovators
-              <br /> bringing AI to medical assistance
+              We are a team of content writers who share their learnings.
             </h3>
             <p className="mt-4 text-gray-600">
-              At Medicura AI, we are passionate about transforming healthcare
-              with Artificial Intelligence to make medical guidance accessible,
-              reliable, and efficient for everyone.
+              We are a passionate group of individuals dedicated to creating meaningful content that helps people learn and grow. Through our writing, we aim to inform, educate, and inspire.
             </p>
           </div>
         </div>
@@ -37,70 +29,65 @@ export default function About() {
 
       {/* Stats Section */}
       <div className="relative -mt-16 z-10 flex justify-center">
-        <div className="grid grid-cols-3 gap-6 bg-blue-600 text-white py-6 px-10 rounded-xl shadow-lg">
+        <div className="grid grid-cols-3 gap-6 bg-gray-400 text-white py-6 px-10 rounded-xl shadow-lg">
           <div className="text-center">
             <h2 className="text-3xl md:text-5xl font-extrabold">12+</h2>
-            <p className="text-sm md:text-base font-medium">AI Features</p>
+            <p className="text-sm md:text-base font-medium">Blogs Published</p>
           </div>
           <div className="text-center">
             <h2 className="text-3xl md:text-5xl font-extrabold">18+</h2>
-            <p className="text-sm md:text-base font-medium">Medical Tools</p>
+            <p className="text-sm md:text-base font-medium">Views on Finweet</p>
           </div>
           <div className="text-center">
             <h2 className="text-3xl md:text-5xl font-extrabold">30+</h2>
-            <p className="text-sm md:text-base font-medium">Experts Engaged</p>
+            <p className="text-sm md:text-base font-medium">Total Active Users</p>
           </div>
         </div>
       </div>
 
+      {/* Progress Bar */}
+      <div className="w-full h-4 bg-gray-300 mt-4">
+        <div className="w-1/3 h-full bg-green-500"></div>
+      </div>
+
       {/* About + Mission */}
       <div className="max-w-6xl mx-auto py-16 px-6 grid md:grid-cols-2 gap-12">
-        <div>
-          <h2 className="text-xl font-bold text-blue-700">ABOUT US</h2>
+        <div className="bg-gray-100 p-6 rounded-lg">
+          <h2 className="text-xl font-bold text-green-700">ABOUT US</h2>
           <h3 className="text-2xl md:text-3xl font-semibold mt-2">
-            A trusted AI-powered medical assistant
+            We are a community of content writers who share their learnings
           </h3>
           <p className="mt-4 text-gray-600 leading-relaxed">
-            Medicura AI is a digital healthcare companion that helps analyze
-            symptoms, check drug interactions, summarize medical reports, and
-            provide accessible health insights. We aim to assist patients and
-            healthcare professionals with intelligent tools that save time and
-            improve decision-making.
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
           </p>
+          <a href="#" className="text-green-600 mt-4 inline-block">Read More</a>
         </div>
-
-        <div>
-          <h2 className="text-xl font-bold text-blue-700">OUR MISSION</h2>
+        <div className="bg-gray-100 p-6 rounded-lg">
+          <h2 className="text-xl font-bold text-green-700">OUR MISSION</h2>
           <h3 className="text-2xl md:text-3xl font-semibold mt-2">
-            Making healthcare accessible for all
+            Creating valuable content for creatives all around the world
           </h3>
           <p className="mt-4 text-gray-600 leading-relaxed">
-            Our mission is to democratize healthcare by combining artificial
-            intelligence with medical expertise. We want to empower individuals
-            worldwide with easy-to-use tools that simplify healthcare and ensure
-            reliable support when they need it the most.
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
           </p>
         </div>
       </div>
 
       {/* Our Team */}
-      <div className="bg-blue-50 py-16 px-6">
+      <div className="bg-white py-16 px-6">
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 items-center">
           <div>
-            <h2 className="text-xl font-bold text-blue-700">Our Team</h2>
+            <h2 className="text-xl font-bold text-yellow-600">Our Team of Creatives</h2>
             <h3 className="text-2xl md:text-3xl font-semibold mt-2">
-              Driven by Innovation in Healthcare
+              We are dedicated to excellence, combining our expertise and passion to create innovative and impactful solutions.
             </h3>
             <p className="mt-4 text-gray-600 leading-relaxed">
-              Our team is a diverse group of doctors, AI specialists, and
-              innovators committed to improving healthcare delivery. Together,
-              we combine technology and compassion to create impactful solutions
-              for patients and professionals alike.
+              Our team consists of professionals from various fields, each bringing their unique skills and perspective. We work collaboratively, driven by a shared goal of delivering exceptional work that resonates with our audience. From conceptualization to execution, we strive for creativity and quality in every project we undertake. Together, we turn ideas into reality.
             </p>
           </div>
           <Image
-            src="/team.jpg" // apni image path yahan daalna
-            alt="Medicura AI Team"
+            src="/team.jpg" // Replace with your team image path
+            alt="Team of Creatives"
             width={600}
             height={400}
             className="rounded-lg shadow-lg"
@@ -111,23 +98,19 @@ export default function About() {
       {/* Why We Started */}
       <div className="max-w-6xl mx-auto py-16 px-6 grid md:grid-cols-2 gap-12 items-center">
         <Image
-          src="/started.jpg" // apni image path yahan daalna
+          src="/started.jpg" // Replace with your started image path
           alt="Why We Started"
           width={600}
           height={400}
           className="rounded-lg shadow-lg"
         />
         <div>
-          <h2 className="text-xl font-bold text-blue-700">Why We Started</h2>
+          <h2 className="text-xl font-bold text-purple-700">Why we started this blog</h2>
           <h3 className="text-2xl md:text-3xl font-semibold mt-2">
-            A vision to transform healthcare
+            Our journey began with a passion to share insights and connect with like-minded individuals.
           </h3>
           <p className="mt-4 text-gray-600 leading-relaxed">
-            Medicura AI was born out of a mission to make healthcare smarter and
-            more accessible. With rising healthcare challenges, we envisioned a
-            platform that integrates AI to support medical needs—from basic
-            symptom analysis to advanced drug safety checks—helping people take
-            control of their health.
+            This blog was born out of a desire to provide valuable content to readers across the globe. We wanted to create a space where we could share our knowledge, experiences, and ideas on topics that matter most to us and our community. From personal stories to expert advice, our goal is to inspire, inform, and spark meaningful conversations. Whether you are here to learn something new, get motivated, or simply enjoy great content, we welcome you to join us on this exciting journey.
           </p>
         </div>
       </div>
