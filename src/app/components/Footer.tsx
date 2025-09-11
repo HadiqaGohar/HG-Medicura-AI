@@ -36,13 +36,13 @@ const Footer = () => {
           <div>
             <h4 className="text-lg font-semibold mb-4">Contact Us</h4>
             <p className="text-gray-400">Have questions or need support?</p>
-            <p className="text-gray-400 mt-2">Email: support@healthai.com</p>
-            <p className="text-gray-400">Phone: +1 (800) 123-4567</p>
+            <p className="text-gray-400 mt-2">Email: hadiqagohar12@gmail.com</p>
+            <p className="text-gray-400">Phone: +92 311-2130948</p>
           </div>
         </div>
         
         <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-          <p>&copy; {new Date().getFullYear()} MedicuraAI Assistant | Powered by Hadiqa Gohar</p>
+          <p>&copy; {new Date().getFullYear()} MedicuraAI Assistant | Powered by Hadiqa Gohar | TiDB Hackthon</p>
         </div>
       </div>
     </footer>
