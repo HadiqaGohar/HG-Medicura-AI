@@ -18,7 +18,7 @@ const Footer = () => {
               <li><Link href="/" className="text-gray-400 hover:text-white">Home</Link></li>
               <li><Link href="/about" className="text-gray-400 hover:text-white">About Auth</Link></li>
               <li><Link href="/privacy-policy" className="text-gray-400 hover:text-white">Privacy Policy</Link></li>
-              <li><Link href="/admin" className="text-gray-400 hover:text-white">Admin</Link></li>
+              <li><Link href="/about-us" className="text-gray-400 hover:text-white">About Us</Link></li>
 
             </ul>
           </div>
@@ -26,10 +26,10 @@ const Footer = () => {
           <div>
             <h4 className="text-lg font-semibold mb-4">Health Services</h4>
             <ul className="space-y-2">
-              <li><Link href="#" className="text-gray-400 hover:text-white">Symptom Analyzer</Link></li>
-              <li><Link href="#" className="text-gray-400 hover:text-white">Drug Interaction</Link></li>
-              <li><Link href="#" className="text-gray-400 hover:text-white">Medical Terms</Link></li>
-              <li><Link href="#" className="text-gray-400 hover:text-white">Chat Assistant</Link></li>
+              <li><Link href="/services/symptom-analyzer" className="text-gray-400 hover:text-white">Symptom Analyzer</Link></li>
+              <li><Link href="/services/drug-interaction" className="text-gray-400 hover:text-white">Drug Interaction</Link></li>
+              <li><Link href="/services/medical-term" className="text-gray-400 hover:text-white">Medical Terms</Link></li>
+              <li><Link href="/services/report-summarize" className="text-gray-400 hover:text-white">Report Summarize</Link></li>
             </ul>
           </div>
           
