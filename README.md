@@ -107,13 +107,6 @@ npm start
 
 App → `http://localhost:3000`
 
-### 5. (Optional) Docker
-
-```bash
-docker build -t medicura-ai .
-docker run -p 8000:8000 --env-file backend/.env medicura-ai
-```
-
 ---
 
 ## 🚀 Usage
