@@ -69,9 +69,6 @@ TIDB_HOST=your-tidb-host
 TIDB_USER=your-tidb-user
 TIDB_PASSWORD=your-tidb-password
 TIDB_DATABASE=medicura
-AWS_ACCESS_KEY_ID=your-aws-access-key
-AWS_SECRET_ACCESS_KEY=your-aws-secret-key
-AWS_REGION=your-aws-region
 ```
 
 Initialize DB:
