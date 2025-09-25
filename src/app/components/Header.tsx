@@ -686,6 +686,13 @@ import UserProfile from './UserProfile';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+
+// -----------------------------------------------------
+import MedicineReminderHeader from './MedicineReminderHeader';
+// -----------------------------------------------------
+
+
+
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [servicesDropdownOpen, setServicesDropdownOpen] = useState(false);
@@ -944,8 +951,10 @@ const Header = () => {
         </ul>
       </nav>
 
+      
+
       {/* User Actions */}
-      <nav className="hidden md:flex space-x-4 items-center">
+      {/* <nav className="hidden md:flex space-x-4 items-center">
         {session ? (
           <UserProfile />
         ) : (
@@ -962,7 +971,33 @@ const Header = () => {
         >
           Contact
         </Link>
+      </nav> */}
+      {/* ------------------------------------------------------------------------ */}
+      {/* User Actions */}
+      <nav className="hidden md:flex space-x-4 items-center">
+        <Link
+          href="/contact"
+          className="px-6 py-2 border border-gray-300 hover:bg-gray-50 rounded-full text-gray-700 transition-colors duration-200 font-medium"
+        >
+          Contact
+        </Link>
+        
+        {/* Medicine Reminder Bell - Only show for authenticated users */}
+        {session && <MedicineReminderHeader />}
+        
+        {session ? (
+          <UserProfile />
+        ) : (
+          <button
+            onClick={() => signIn('google')}
+            className="px-6 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors duration-200 font-medium"
+          >
+            Sign In
+          </button>
+        )}
       </nav>
+      {/* ------------------------------------------------------------------------ */}
+
 
       {/* Mobile Hamburger */}
       <div className="md:hidden">
