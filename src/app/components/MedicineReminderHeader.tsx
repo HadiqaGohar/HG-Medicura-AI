@@ -525,7 +525,7 @@ const MedicineReminderHeader: React.FC = () => {
                         onClick={addTimeSlot}
                         className="text-sm text-blue-600 hover:text-blue-800 flex items-center space-x-1"
                       >
-                        <FiPlus size= {14} />
+                        <FiPlus size={14} />
                         <span>Add another time</span>
                       </button>
                     </div>
