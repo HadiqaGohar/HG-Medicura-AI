@@ -190,7 +190,7 @@ const MedicineReminderNotification: React.FC = () => {
     // Show only toast notification if user is logged in
     if (session?.user?.email) {
       toast(message, {
-        icon: '💊',
+        // icon: '💊',
         duration: 5000,
         position: 'top-right',
         style: {
