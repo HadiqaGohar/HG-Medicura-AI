@@ -133,19 +133,42 @@ const MedicineReminderHeader: React.FC = () => {
       reminder.dosage ? ` (${reminder.dosage})` : ""
     }`;
 
+    // toast(message, {
+    //   // icon: "💊",
+    //   duration: 5000,
+    //   position: "top-center",
+    //   style: {
+    //     background: "#3B82F6",
+    //     color: "white",
+    //     fontWeight: "bold",
+    //     padding: "16px",
+    //     borderRadius: "12px",
+    //     fontSize: "16px",
+    //     minWidth: "300px",
+    //   },
     toast(message, {
-      // icon: "💊",
-      duration: 5000,
-      position: "top-center",
-      style: {
-        background: "#10B981",
-        color: "white",
-        fontWeight: "bold",
-        padding: "16px",
-        borderRadius: "12px",
-        fontSize: "16px",
-        minWidth: "300px",
-      },
+  // icon: "💊", // Commented out as per your input
+  duration: 5000,
+  position: "top-center",
+  style: {
+    background: "#3B82F6",
+    color: "white",
+    fontWeight: "bold",
+    padding: "16px",
+    borderRadius: "12px",
+    fontSize: "16px",
+    minWidth: "300px",
+    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08)", // Subtle shadow
+    transition: "all 0.3s ease-in-out", // Smooth transition for all properties
+    opacity: 1, // Initial opacity
+    transform: "scale(1)", // Initial scale
+  },
+  // Custom enter and exit animations using react-hot-toast's animation prop
+  enter: "transform ease-out duration-300 transition-opacity",
+  exit: "transform ease-in duration-300 transition-opacity",
+  // Custom className for additional Tailwind styles
+  className: "animate-fade-in-scale",
+});
     });
 
     if ("Notification" in window && Notification.permission === "granted") {
