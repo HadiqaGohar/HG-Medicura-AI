@@ -141,6 +141,6 @@ npm start
 
 ## 📬 Contact
 
-For questions: **\[[your-email@example.com](mailto:your-email@example.com)]** or open a GitHub Issue.
+For questions: **\[[your-email@example.com](mailto:hadiqagohar12@gmail.com)]** or open a GitHub Issue.
 
 ✨ Thank you for reviewing Medicura-AI for the TiDB AgentX Hackathon 2025!
