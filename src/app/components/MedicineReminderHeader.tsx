@@ -174,7 +174,7 @@ const MedicineReminderHeader: React.FC = () => {
         // Fallback: create a simple beep sound using Web Audio API
         try {
           const audioContext = new (window.AudioContext ||
-            (window as any).webkitAudioContext)();
+            (window).webkitAudioContext)();
           const oscillator = audioContext.createOscillator();
           const gainNode = audioContext.createGain();
 
