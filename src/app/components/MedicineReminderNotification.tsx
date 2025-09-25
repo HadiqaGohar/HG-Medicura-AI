@@ -116,6 +116,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
+import { FiBell, FiClock } from 'react-icons/fi';
 
 interface MedicineReminder {
   id: string;
@@ -186,11 +187,11 @@ const MedicineReminderNotification: React.FC = () => {
       reminder.dosage ? ` (${reminder.dosage})` : ''
     }`;
 
-    // Only show toast if user has active reminders and is logged in
+    // Show only toast notification if user is logged in
     if (session?.user?.email) {
       toast(message, {
         icon: '💊',
-        duration: 5000, // Reduced to 5 seconds
+        duration: 5000,
         position: 'top-right',
         style: {
           background: '#10B981',
@@ -203,13 +204,6 @@ const MedicineReminderNotification: React.FC = () => {
       });
     }
   };
-
-  // Request notification permission on component mount
-  useEffect(() => {
-    if ('Notification' in window && Notification.permission === 'default') {
-      Notification.requestPermission();
-    }
-  }, []);
 
   return null; // This component doesn't render anything visible
 };
