@@ -1056,6 +1056,14 @@ const Header = () => {
             >
               <TbWorldQuestion className='mr-3 text-lg'/> About
             </Link>
+            
+            {/* Medicine Reminder Bell - Only show for authenticated users */}
+            
+            {session && (
+              <div className="flex items-center p-3 rounded-lg hover:bg-gray-50 transition-colors text-gray-700 font-medium">
+                <MedicineReminderHeader /> Reminder
+              </div>
+            )}
           </div>
 
           {/* Services Section */}
