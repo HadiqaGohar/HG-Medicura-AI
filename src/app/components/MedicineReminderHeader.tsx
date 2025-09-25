@@ -61,7 +61,6 @@ const MedicineReminderHeader: React.FC = () => {
   const [currentTime, setCurrentTime] = useState("");
 
   useEffect(() => {
-    // Update current time based on selected country
     const updateTime = () => {
       const now = new Date();
       const timeInCountry = now.toLocaleTimeString("en-US", {
@@ -85,7 +84,6 @@ const MedicineReminderHeader: React.FC = () => {
   }, [session, isOpen]);
 
   useEffect(() => {
-    // Check for medicine reminders
     if (reminders.length > 0) {
       checkReminders();
     }
@@ -93,7 +91,6 @@ const MedicineReminderHeader: React.FC = () => {
 
   const loadReminders = async () => {
     try {
-      // Load from localStorage first
       const storedReminders = localStorage.getItem('medicineReminders');
       if (storedReminders) {
         const parsedReminders = JSON.parse(storedReminders);
@@ -102,7 +99,6 @@ const MedicineReminderHeader: React.FC = () => {
         return;
       }
 
-      // Fallback to API call
       const response = await fetch("/api/medicine-reminder");
       if (response.ok) {
         const data = await response.json();
@@ -137,7 +133,6 @@ const MedicineReminderHeader: React.FC = () => {
       reminder.dosage ? ` (${reminder.dosage})` : ""
     }`;
 
-    // Show toast notification
     toast(message, {
       icon: "💊",
       duration: 5000,
@@ -153,7 +148,6 @@ const MedicineReminderHeader: React.FC = () => {
       },
     });
 
-    // Show browser notification
     if ("Notification" in window && Notification.permission === "granted") {
       const notification = new Notification("Medicine Reminder", {
         body: message,
@@ -163,33 +157,35 @@ const MedicineReminderHeader: React.FC = () => {
         requireInteraction: true,
       });
 
-      // Auto close after 10 seconds
       setTimeout(() => notification.close(), 10000);
     }
 
-    // Play alarm sound (optional)
     try {
       const audio = new Audio("/notification-sound.mp3");
       audio.play().catch(() => {
         // Fallback: create a simple beep sound using Web Audio API
         try {
-          const audioContext = new (window.AudioContext ||
-            (window).webkitAudioContext)();
-          const oscillator = audioContext.createOscillator();
-          const gainNode = audioContext.createGain();
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) {
+            const audioContext = new AudioContext();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
 
-          oscillator.connect(gainNode);
-          gainNode.connect(audioContext.destination);
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
 
-          oscillator.frequency.value = 800; // Frequency in Hz
-          gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-          gainNode.gain.exponentialRampToValueAtTime(
-            0.01,
-            audioContext.currentTime + 0.5
-          );
+            oscillator.frequency.value = 800; // Frequency in Hz
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(
+              0.01,
+              audioContext.currentTime + 0.5
+            );
 
-          oscillator.start(audioContext.currentTime);
-          oscillator.stop(audioContext.currentTime + 0.5);
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.5);
+          } else {
+            console.log("AudioContext not available");
+          }
         } catch (beepError) {
           console.log("Audio beep not available");
         }
@@ -230,7 +226,6 @@ const MedicineReminderHeader: React.FC = () => {
       if (response.ok) {
         const data = await response.json();
         
-        // Store reminder locally
         if (data.reminder) {
           const storedReminders = localStorage.getItem('medicineReminders');
           const existingReminders = storedReminders ? JSON.parse(storedReminders) : [];
@@ -263,7 +258,6 @@ const MedicineReminderHeader: React.FC = () => {
 
   const deleteReminder = async (reminderId: string) => {
     try {
-      // Delete from localStorage
       const storedReminders = localStorage.getItem('medicineReminders');
       if (storedReminders) {
         const existingReminders = JSON.parse(storedReminders);
@@ -276,7 +270,6 @@ const MedicineReminderHeader: React.FC = () => {
         return;
       }
 
-      // Fallback to API call
       const response = await fetch(`/api/medicine-reminder/${reminderId}`, {
         method: "DELETE",
       });
@@ -295,7 +288,6 @@ const MedicineReminderHeader: React.FC = () => {
 
   const toggleReminder = async (reminderId: string, isActive: boolean) => {
     try {
-      // Update in localStorage
       const storedReminders = localStorage.getItem('medicineReminders');
       if (storedReminders) {
         const existingReminders = JSON.parse(storedReminders);
@@ -310,7 +302,6 @@ const MedicineReminderHeader: React.FC = () => {
         return;
       }
 
-      // Fallback to API call
       const response = await fetch(`/api/medicine-reminder/${reminderId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -353,7 +344,6 @@ const MedicineReminderHeader: React.FC = () => {
     });
   };
 
-  // Request notification permission on component mount
   useEffect(() => {
     if ("Notification" in window && Notification.permission === "default") {
       Notification.requestPermission();
@@ -361,12 +351,11 @@ const MedicineReminderHeader: React.FC = () => {
   }, []);
 
   if (!session?.user?.email) {
-    return null; // Don't show for non-authenticated users
+    return null;
   }
 
   return (
     <div className="relative">
-      {/* Bell Icon Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="relative p-2 text-gray-600 hover:text-blue-600 transition-colors duration-200 rounded-full hover:bg-gray-100"
@@ -380,18 +369,13 @@ const MedicineReminderHeader: React.FC = () => {
         )}
       </button>
 
-      {/* Dropdown Panel */}
       {isOpen && (
         <>
-          {/* Backdrop */}
           <div
             className="fixed inset-0 z-40"
             onClick={() => setIsOpen(false)}
           />
-
-          {/* Panel */}
           <div className="absolute right-0 mt-2 w-96 bg-white rounded-xl shadow-2xl border border-gray-200 z-50 max-h-[80vh] overflow-hidden">
-            {/* Header */}
             <div className="p-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-green-50">
               <div className="flex items-center justify-between">
                 <div>
@@ -411,10 +395,7 @@ const MedicineReminderHeader: React.FC = () => {
                 </button>
               </div>
             </div>
-
-            {/* Content */}
             <div className="max-h-96 overflow-y-auto">
-              {/* Country Selection */}
               <div className="p-4 border-b border-gray-100">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Select Your Country/Timezone
@@ -436,9 +417,7 @@ const MedicineReminderHeader: React.FC = () => {
                   ))}
                 </select>
               </div>
-
-              {/* Add New Reminder Button */}
-              <div className="p-4 border-b border-gray-100 space-y-2">
+              <div className="p-4 border-b border-gray-100">
                 <button
                   onClick={() => setShowAddForm(!showAddForm)}
                   className="w-full flex items-center justify-center space-x-2 p-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200"
@@ -446,8 +425,6 @@ const MedicineReminderHeader: React.FC = () => {
                   <FiPlus size={18} />
                   <span>Add New Reminder</span>
                 </button>
-                
-                {/* Test Alarm Button */}
                 {reminders.length > 0 && (
                   <button
                     onClick={() => {
@@ -462,8 +439,6 @@ const MedicineReminderHeader: React.FC = () => {
                   </button>
                 )}
               </div>
-
-              {/* Add Form */}
               {showAddForm && (
                 <div className="p-4 border-b border-gray-100 bg-gray-50">
                   <div className="space-y-3">
@@ -519,8 +494,6 @@ const MedicineReminderHeader: React.FC = () => {
                         <option value="Weekly">Weekly</option>
                       </select>
                     </div>
-
-                    {/* Time Slots */}
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         Reminder Times *
@@ -552,11 +525,10 @@ const MedicineReminderHeader: React.FC = () => {
                         onClick={addTimeSlot}
                         className="text-sm text-blue-600 hover:text-blue-800 flex items-center space-x-1"
                       >
-                        <FiPlus size={14} />
+                        <FiPlus size= {14} />
                         <span>Add another time</span>
                       </button>
                     </div>
-
                     <div className="flex space-x-2 pt-2">
                       <button
                         onClick={addReminder}
@@ -574,8 +546,6 @@ const MedicineReminderHeader: React.FC = () => {
                   </div>
                 </div>
               )}
-
-              {/* Reminders List */}
               <div className="p-4">
                 {reminders.length > 0 ? (
                   <div className="space-y-3">
@@ -608,9 +578,7 @@ const MedicineReminderHeader: React.FC = () => {
                               </span>
                             </div>
                           </div>
-
                           <div className="flex items-center space-x-2">
-                            {/* Mobile-style Toggle Switch */}
                             <button
                               onClick={() =>
                                 toggleReminder(reminder.id, reminder.is_active)
@@ -629,8 +597,6 @@ const MedicineReminderHeader: React.FC = () => {
                                 }`}
                               />
                             </button>
-
-                            {/* Delete Button */}
                             <button
                               onClick={() => deleteReminder(reminder.id)}
                               className="p-1 text-red-500 hover:bg-red-50 rounded-full transition-colors"
