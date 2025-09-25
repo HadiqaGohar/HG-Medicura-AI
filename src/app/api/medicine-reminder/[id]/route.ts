@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 
-export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
+// PATCH handler for updating a reminder
+export async function PATCH(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
     const session = await getServerSession();
     
@@ -13,7 +17,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     }
 
     const body = await req.json();
-    const reminderId = params.id;
+    const { id: reminderId } = await params; // Resolve params Promise
 
     const FASTAPI_URL = process.env.NEXT_PUBLIC_FASTAPI_URL;
     if (!FASTAPI_URL) {
@@ -53,7 +57,11 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   }
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+// DELETE handler for deleting a reminder
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
     const session = await getServerSession();
     
@@ -64,7 +72,7 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
       );
     }
 
-    const reminderId = params.id;
+    const { id: reminderId } = await params; // Resolve params Promise
 
     const FASTAPI_URL = process.env.NEXT_PUBLIC_FASTAPI_URL;
     if (!FASTAPI_URL) {
