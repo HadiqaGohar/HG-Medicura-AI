@@ -129,12 +129,12 @@ const MedicineReminderHeader: React.FC = () => {
   };
 
   const showMedicineAlert = (reminder: MedicineReminder) => {
-    const message = `Time to take: ${reminder.medicine_name}${
+    const message = `💊 Time to take: ${reminder.medicine_name}${
       reminder.dosage ? ` (${reminder.dosage})` : ""
     }`;
 
     toast(message, {
-      icon: "💊",
+      // icon: "💊",
       duration: 5000,
       position: "top-center",
       style: {
