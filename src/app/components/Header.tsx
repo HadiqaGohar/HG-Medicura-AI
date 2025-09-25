@@ -975,12 +975,12 @@ const Header = () => {
       {/* ------------------------------------------------------------------------ */}
       {/* User Actions */}
       <nav className="hidden md:flex space-x-4 items-center">
-        <Link
+        {/* <Link
           href="/contact"
           className="px-6 py-2 border border-gray-300 hover:bg-gray-50 rounded-full text-gray-700 transition-colors duration-200 font-medium"
         >
           Contact
-        </Link>
+        </Link> */}
         
         {/* Medicine Reminder Bell - Only show for authenticated users */}
         {session && <MedicineReminderHeader />}
@@ -995,6 +995,12 @@ const Header = () => {
             Sign In
           </button>
         )}
+             <Link
+          href="/contact"
+          className="px-6 py-2 border border-gray-300 hover:bg-gray-50 rounded-full text-gray-700 transition-colors duration-200 font-medium"
+        >
+          Contact
+        </Link>
       </nav>
       {/* ------------------------------------------------------------------------ */}
 
