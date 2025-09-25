@@ -233,7 +233,7 @@ const MedicineReminderHeader: React.FC = () => {
           localStorage.setItem('medicineReminders', JSON.stringify(updatedReminders));
           
           console.log("💾 Stored reminder locally:", data.reminder);
-          toast.success(`✅ Reminder set for ${newReminder.medicine_name} at ${newReminder.reminder_times.join(', ')}`);
+          toast.success(`Reminder set for ${newReminder.medicine_name} at ${newReminder.reminder_times.join(', ')}`);
         } else {
           toast.success(`Reminder set for ${newReminder.medicine_name}`);
         }
@@ -432,7 +432,7 @@ const MedicineReminderHeader: React.FC = () => {
                       console.log("🧪 Testing alarm for:", testReminder.medicine_name);
                       showMedicineAlert(testReminder);
                     }}
-                    className="w-full flex items-center justify-center space-x-2 p-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors duration-200 text-sm"
+                    className="w-full flex items-center justify-center space-x-2 p-2 mt-3 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors duration-200 text-sm"
                   >
                     <FiBell size={16} />
                     <span>Test Alarm</span>
