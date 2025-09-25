@@ -136,7 +136,7 @@ const MedicineReminderHeader: React.FC = () => {
     toast(message, {
       // icon: "💊",
       duration: 5000,
-      position: "top-center",
+      position: "top-right",
       style: {
         background: "#3B82F6",
         color: "white",
@@ -144,7 +144,7 @@ const MedicineReminderHeader: React.FC = () => {
         padding: "16px",
         borderRadius: "12px",
         fontSize: "16px",
-        minWidth: "300px",
+        minWidth: "200px",
       },
 
     });
